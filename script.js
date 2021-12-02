@@ -54,4 +54,8 @@ const listCreator = async () => {
   }
 };
 
-window.onload = async () => listCreator();
+window.onload = async () => {
+  listCreator();
+  console.log(await fetchProducts('computador'));
+  console.log(await fetchItem('MLB1615760527'));
+};
