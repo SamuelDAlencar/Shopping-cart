@@ -1,5 +1,3 @@
-// const { fetchItem } = require("./helpers/fetchItem");
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -64,13 +62,21 @@ const cartAdder = () => {
       const id = getSkuFromProductItem(target.parentNode);
       const item = await fetchItem(id);
       cart.appendChild(createCartItemElement(item));
-      console.log(id);
-      console.log(item);
+      saveCartItems();
     });
+  });
+};
+
+const cartCleaner = () => {
+  const button = document.querySelector('.empty-cart');
+  const cartItems = document.querySelector('.cart__items');
+  button.addEventListener('click', () => {
+    cartItems.innerHTML = '';
   });
 };
 
 window.onload = async () => {
   await listCreator();
   cartAdder();
+  cartCleaner();
 };
