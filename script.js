@@ -1,3 +1,5 @@
+// const { fetchItem } = require("./helpers/fetchItem");
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -32,7 +34,7 @@ function cartItemClickListener(event) {
   // coloque seu código aqui
 }
 
-function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
@@ -43,7 +45,6 @@ function createCartItemElement({ sku, name, salePrice }) {
 const listCreator = async () => {
   try {
     const result = await fetchProducts('computador');
-    console.log(result);
 
     const parent = document.querySelector('.items');
     result.results.forEach((product) => {
@@ -54,8 +55,22 @@ const listCreator = async () => {
   }
 };
 
+const cartAdder = () => {
+  const parent = document.querySelector('.cart__items');
+  const buttons = document.querySelectorAll('.item__add');
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', async ({ target }) => {
+      const id = target.parentNode.firstChild.innerText;
+      const item = await fetchItem(id);
+      parent.appendChild(createCartItemElement(item));
+      console.log(id);
+      console.log(item);
+    });
+  });
+};
+
 window.onload = async () => {
-  listCreator();
-  console.log(await fetchProducts('computador'));
-  console.log(await fetchItem('MLB1615760527'));
+  await listCreator();
+  cartAdder();
 };
