@@ -56,14 +56,14 @@ const listCreator = async () => {
 };
 
 const cartAdder = () => {
-  const parent = document.querySelector('.cart__items');
+  const cart = document.querySelector('.cart__items');
   const buttons = document.querySelectorAll('.item__add');
 
   buttons.forEach((button) => {
     button.addEventListener('click', async ({ target }) => {
-      const id = target.parentNode.firstChild.innerText;
+      const id = getSkuFromProductItem(target.parentNode);
       const item = await fetchItem(id);
-      parent.appendChild(createCartItemElement(item));
+      cart.appendChild(createCartItemElement(item));
       console.log(id);
       console.log(item);
     });
