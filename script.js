@@ -1,3 +1,6 @@
+// Constante 'cart' para uso geral no escopo global
+const cart = document.querySelector('.cart__items');
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -54,7 +57,6 @@ const listCreator = async () => {
 };
 
 const cartAdder = () => {
-  const cart = document.querySelector('.cart__items');
   const buttons = document.querySelectorAll('.item__add');
 
   buttons.forEach((button) => {
@@ -62,7 +64,7 @@ const cartAdder = () => {
       const id = getSkuFromProductItem(target.parentNode);
       const item = await fetchItem(id);
       cart.appendChild(createCartItemElement(item));
-      saveCartItems();
+      saveCartItems(cart.innerHTML);
     });
   });
 };
@@ -72,11 +74,19 @@ const cartCleaner = () => {
   const cartItems = document.querySelector('.cart__items');
   button.addEventListener('click', () => {
     cartItems.innerHTML = '';
+    localStorage.clear();
   });
+};
+
+const setSavedCartItems = () => {
+  const storage = getSavedCartItems();
+
+  cart.innerHTML = JSON.parse(storage);
 };
 
 window.onload = async () => {
   await listCreator();
   cartAdder();
   cartCleaner();
+  setSavedCartItems();
 };
