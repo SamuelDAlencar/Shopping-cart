@@ -1,7 +1,6 @@
 // Global scope variables
 const cartSec = document.querySelector('.cart');
 const cart = document.querySelector('.cart__items');
-const coinFormat = { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' };
 const totalPriceClass = '.total-price';
 let currentPrice = 0;
 
