@@ -49,7 +49,7 @@ function cartItemClickListener({ target }) {
     .replace('.', '')
     .replace(',', '.')}`;
   currentPrice -= priceAfterClick;
-  priceSaver(totalPrice.innerHTML, priceAfterClick);
+  priceSaver(totalPrice.innerHTML, currentPrice);
   console.log(priceAfterClick);
 }
 
@@ -64,7 +64,6 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
 const listCreator = async () => {
   try {
     const result = await fetchProducts('computador');
-
     const parent = document.querySelector('.items');
     result.results.forEach((product) => {
       parent.appendChild(createProductItemElement(product));
@@ -126,11 +125,11 @@ const cartAdder = async () => {
 };
 
 const cartCleaner = () => {
-  const button = document.querySelector('.empty-cart');
+  const emptyButton = document.querySelector('.empty-cart');
   const cartItems = document.querySelector('.cart__items');
   const basePrice = 0;
   const totalPrice = document.querySelector(totalPriceClass);
-  button.addEventListener('click', () => {
+  emptyButton.addEventListener('click', () => {
     cartItems.innerHTML = '';
     localStorage.clear();
     totalPrice.innerText = `${basePrice.toLocaleString('pt-BR')}`;
