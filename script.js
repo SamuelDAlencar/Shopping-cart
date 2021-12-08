@@ -1,8 +1,9 @@
-// Global scope variables
+// Global scope variables -
 const cartSec = document.querySelector('.cart');
 const cart = document.querySelector('.cart__items');
 const totalPriceClass = '.total-price';
 let currentPrice = 0;
+// -------------------------------------------------
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -63,7 +64,12 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
 
 const listCreator = async () => {
   try {
+    const spanCreator = document.createElement('span');
+    spanCreator.innerText = 'carregando...';
+    spanCreator.className = 'loading';
+    cartSec.appendChild(spanCreator);
     const result = await fetchProducts('computador');
+    spanCreator.remove();
     const parent = document.querySelector('.items');
     result.results.forEach((product) => {
       parent.appendChild(createProductItemElement(product));
