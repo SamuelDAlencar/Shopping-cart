@@ -36,9 +36,11 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image, pric
   const section = document.createElement('section');
   section.className = 'item';
 
+  const newImage = image.replace('-I', '-W');
+
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createProductImageElement(image));
+  section.appendChild(createProductImageElement(newImage));
   section.appendChild(createCustomElement('span', 'item__price-format', 'US'))
     .appendChild(createCustomElement('span', 'item__price', `${price} $`));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
@@ -89,11 +91,12 @@ function cartItemClickListener({ target }) {
 
 function createCartItemElement({ id: sku, title: name, price: salePrice, thumbnail }) {
   const li = document.createElement('li');
+  const newImage = thumbnail.replace('-I', '-W');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   const img = document.createElement('img');
-  img.src = thumbnail;
+  img.src = newImage;
   img.className = 'cart__item_img';
   li.appendChild(img);
   return li;
