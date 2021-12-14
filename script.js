@@ -1,7 +1,9 @@
-// Global scope variables -
+// Global scope variables:
 const body = document.getElementsByTagName('body')[0];
+const itemList = document.querySelector('.items');
 const cartSec = document.querySelector('.cart');
-const cart = document.querySelector('.cart__items');
+const cartItems = document.querySelector('.cart__items');
+const emptyButton = document.querySelector('.empty-cart');
 const totalPriceClass = '.total-price';
 let currentPrice = 0;
 // -------------------------------------------------
@@ -9,6 +11,7 @@ let currentPrice = 0;
 function headerAdder() {
   const header = document.createElement('header');
   const h1 = document.createElement('h1');
+
   body.insertBefore(header, body.firstChild);
   header.className = 'header';
   header.appendChild(h1);
@@ -20,6 +23,7 @@ function headerAdder() {
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
+
   img.className = 'item__image';
   img.src = imageSource;
   return img;
@@ -27,39 +31,43 @@ function createProductImageElement(imageSource) {
 
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
+
   e.className = className;
   e.innerText = innerText;
   return e;
 }
 
-function createProductItemElement({ id: sku, title: name, thumbnail: image, price }) {
+function createProductItemElement({
+  id: sku, title: name, thumbnail: image, price, permalink: link,
+}) {
   const section = document.createElement('section');
   section.className = 'item';
-
-  const newImage = image.replace('-I', '-W');
-
   section.appendChild(createCustomElement('span', 'item__sku', sku));
-  section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createProductImageElement(newImage));
-  section.appendChild(createCustomElement('span', 'item__price-format', 'US'))
-    .appendChild(createCustomElement('span', 'item__price', `${price} $`));
+  section.appendChild(createCustomElement('span', 'item__title', name))
+    .addEventListener('click', ({ target }) => {
+      if (target.className !== 'item__add') window.open(link);
+    });
+  section.appendChild(createProductImageElement(image.replace('-I', '-W')))
+    .addEventListener('click', ({ target }) => {
+      if (target.className !== 'item__add') window.open(link);
+    });
+  section.appendChild(createCustomElement('span', 'item__price-format', 'BRL'))
+    .appendChild(createCustomElement('span', 'item__price', `R$ ${price}`));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
 
-const priceSaver = (currentPriceInnerHtml, currentPriceNum) => {
+function priceSaver(currentPriceInnerHtml, currentPriceNum) {
   localStorage.setItem('price', JSON.stringify(currentPriceInnerHtml));
   localStorage.setItem('priceNum', JSON.stringify(currentPriceNum));
-};
+}
 
-const cartItemClickListenerIMG = ({ target }) => {
+function cartItemClickListenerIMG({ target }) {
   target.parentNode.remove();
-  saveCartItems(cart.innerHTML);
+  saveCartItems(cartItems.innerHTML);
   const priceAfterClick = target.parentNode.innerText.split('$')[1];
   console.log(priceAfterClick);
   const totalPrice = document.querySelector(totalPriceClass);
@@ -69,23 +77,26 @@ const cartItemClickListenerIMG = ({ target }) => {
     .replace(',', '.')}`;
   currentPrice -= priceAfterClick;
   priceSaver(totalPrice.innerHTML, currentPrice);
-};
+}
 
 function cartItemClickListener({ target }) {
+  const totalPrice = document.querySelector(totalPriceClass);
   if (target.tagName === 'IMG') {
     cartItemClickListenerIMG({ target });
   } else {
     target.remove();
-    saveCartItems(cart.innerHTML);
+    saveCartItems(cartItems.innerHTML);
     const priceAfterClick = target.innerText.split('$')[1];
     console.log(priceAfterClick);
-    const totalPrice = document.querySelector(totalPriceClass);
     totalPrice.innerText = `${(currentPrice - priceAfterClick)
       .toLocaleString('pt-BR')
       .replace('.', '')
       .replace(',', '.')}`;
     currentPrice -= priceAfterClick;
     priceSaver(totalPrice.innerHTML, currentPrice);
+  }
+  if (cartItems.children.length === 0) {
+    totalPrice.innerText = '0';
   }
 }
 
@@ -102,54 +113,55 @@ function createCartItemElement({ id: sku, title: name, price: salePrice, thumbna
   return li;
 }
 
-const closeCartButton = () => {
+function closeCartButton() {
   const button = document.createElement('button');
   cartSec.appendChild(button);
   button.innerText = 'Fechar Pedido';
   button.className = 'close-cart';
   button.addEventListener('click', () => {
-    window.alert('Página de finalização da compra ainda em progresso !');
+    window.alert('Página de finalização da compra ainda em progresso!');
   });
-};
+}
 
-const listCreator = async () => {
+async function listCreator() {
   try {
-    const spanCreator = document.createElement('span');
-    spanCreator.innerText = 'carregando...';
-    spanCreator.className = 'loading';
-    cartSec.appendChild(spanCreator);
+    const span = document.createElement('span');
+    span.innerText = 'carregando...';
+    span.className = 'loading';
+    cartSec.appendChild(span);
     const result = await fetchProducts('computador');
-    spanCreator.remove();
-    const parent = document.querySelector('.items');
+    console.log(result);
+    span.remove();
     result.results.forEach((product) => {
-      parent.appendChild(createProductItemElement(product));
+      itemList.appendChild(createProductItemElement(product));
     });
   } catch (err) {
     console.log(err);
   }
-};
+}
 
-const totalPriceCreator = () => {
+function spanCreator(text, classStrng) {
+  const span = document.createElement('span');
+  span.className = classStrng;
+  span.innerText = text;
+
+  return span;
+}
+
+function totalPriceCreator() {
   const div = document.createElement('div');
-  const span1 = document.createElement('span');
-  const span2 = document.createElement('span');
-  const span3 = document.createElement('span');
-  cartSec.appendChild(div);
-  div.appendChild(span2);
-  div.appendChild(span1);
-  div.appendChild(span3);
-  div.className = 'totalPrice';
-  span3.innerText = ' $';
-  span2.innerText = 'Total: ';
-  span1.className = 'total-price';
   const basePrice = 0;
-  span1.innerText = `${basePrice
+  cartSec.appendChild(div);
+  div.className = 'totalPrice';
+  div.appendChild(spanCreator('Total: '));
+  div.appendChild(spanCreator('R$ '));
+  div.appendChild(spanCreator(`${basePrice
     .toLocaleString('pt-BR')
     .replace('.', '')
-    .replace(',', '.')}}`;
-};
+    .replace(',', '.')}}`, 'total-price'));
+}
 
-const priceCatcher = () => {
+function priceCatcher() {
   const totalPrice = document.querySelector(totalPriceClass);
   const price = localStorage.getItem('price');
   const priceNum = localStorage.getItem('priceNum');
@@ -159,9 +171,9 @@ const priceCatcher = () => {
     totalPrice.innerHTML = JSON.parse(price);
   }
   currentPrice = JSON.parse(priceNum);
-};
+}
 
-const priceSum = (price) => {
+function priceSum(price) {
   const totalPrice = document.querySelector(totalPriceClass);
   totalPrice.innerText = `${(currentPrice + price)
     .toLocaleString('pt-BR')
@@ -169,29 +181,26 @@ const priceSum = (price) => {
     .replace(',', '.')}`;
   currentPrice += price;
   priceSaver(totalPrice.innerHTML, currentPrice);
-};
+}
 
-const cartAdder = async () => {
-  const buttons = document.querySelectorAll('.item__add');
-
+async function cartAdder() {
   try {
-    buttons.forEach((button) => {
+    const addButtons = document.querySelectorAll('.item__add');
+    addButtons.forEach((button) => {
       button.addEventListener('click', async ({ target }) => {
         const id = await getSkuFromProductItem(target.parentNode);
         const item = await fetchItem(id);
-        cart.appendChild(createCartItemElement(item));
-        saveCartItems(cart.innerHTML);
+        cartItems.appendChild(createCartItemElement(item));
+        saveCartItems(cartItems.innerHTML);
         priceSum(item.price);
       });
     });
   } catch (err) {
     console.log(err);
   }
-};
+}
 
-const cartCleaner = () => {
-  const emptyButton = document.querySelector('.empty-cart');
-  const cartItems = document.querySelector('.cart__items');
+function cartCleaner() {
   const basePrice = 0;
   const totalPrice = document.querySelector(totalPriceClass);
   emptyButton.addEventListener('click', () => {
@@ -203,15 +212,15 @@ const cartCleaner = () => {
     totalPrice.innerText = `${basePrice.toLocaleString('pt-BR')}`;
     currentPrice = 0;
   });
-};
+}
 
-const setSavedCartItems = () => {
+function setSavedCartItems() {
   const storage = getSavedCartItems();
-  cart.innerHTML = JSON.parse(storage);
-  cart.childNodes.forEach((item) => {
+  cartItems.innerHTML = JSON.parse(storage);
+  cartItems.childNodes.forEach((item) => {
     item.addEventListener('click', cartItemClickListener);
   });
-};
+}
 
 function footerAdder() {
   const footer = document.createElement('footer');
