@@ -5,9 +5,13 @@
 
 body {
   margin: 0px;
+  background-color: whitesmoke;
 }
 
-.header {
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: #036b52;
   margin: 0px;
   border-bottom: 7px solid #2fc18c;
@@ -16,25 +20,66 @@ body {
   height: 90px;
 }
 
-.header h1 {
-  font-size: 40px;
-  padding: 25px;
-  margin: 0px 50px;
-  color: aliceblue;
+header .title_div {
+  margin-left: 70px;
   cursor: pointer;
-  width: fit-content;
+  width: 200px;
 }
 
-.header h1:hover {
+header .title_div .logo {
+  width: 80px;
+  position: absolute;
+  /* padding: 0px 40px; */
+}
+
+header .title_div h1 {
+  font-size: 40px;
+  padding: 25px;
+  margin: 0px 60px;
+  color: aliceblue;
+  cursor: pointer;
+}
+
+header .title_div h1:hover {
+  font-size: 42px;
+}
+
+header .title_div h1:active {
   font-size: 41px;
+  color: rgb(213, 219, 226);
+}
+
+header nav {
+  margin-right: 40px;
+}
+
+header nav a {
+  font-size: 21px;
+  padding: 15px;
+  margin: 0px 15px;
+  color: aliceblue;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+header nav a:hover {
+  font-size: 22px;
+}
+
+header nav a:active {
+  font-size: 21px;
+  color: rgb(213, 219, 226);
+}
+
+header nav a span {
+  margin: 0px 10px;
 }
 
 .container {
   display: flex;
   justify-content: space-around;
-  width: 100%;
   color: #525252;
-  padding-top: 130px;
+  padding-top: 100px;
 }
 
 .items {
@@ -42,69 +87,70 @@ body {
   flex-basis: 70%;
   flex-wrap: wrap;
   justify-content: center;
-  margin: 15px;
+  margin-top: 20px;
 }
 
 .item {
-  border: 1px solid grey;
-  border-radius: 5px;
+  background-color: white;
+  border-radius: 10px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  height: auto;
-  margin: 10px;
+  margin: 0px 15px 15px 15px;
   width: 260px;
   padding: 10px;
-}
-
-.item:hover {
-  background-color: whitesmoke;
-  font-size: 25px;
+  cursor: pointer;
+  box-shadow: 1px 1px #d6d6d6;
 }
 
 .item:hover > .item__image {
-  border: 0.5px solid #c3c3c3;
-  border-radius: 30px;
+  width: 101%;
 }
 
-.item:hover > .item__add {
-  border: 0.5px solid #c3c3c3;
+.item:active > .item__image {
+  width: 100%;
 }
 
 .item .item__sku {
-  display: none;
-}
-
-.item .item__title {
-  flex-grow: 1;
-  padding: 15px;
-  text-align: center;
-  font-size: 20px;
-  cursor: pointer;
-  height: fit-content;
-}
-
-.item .item__title:hover {
-  border-radius: 5px;
-  background-color: whitesmoke;
-}
-
-.item__price-format {
-  font-size: 15px;
-  font-weight: 400;
-  margin: 10px;
-}
-
-.item__price {
-  font-size: 30px;
-  font-weight: 400;
-  margin-left: 3px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  color: #8a8a8a;
 }
 
 .item .item__image {
   width: 100%;
   cursor: pointer;
   align-self: center;
+}
+
+.hr_divisor {
+  width: 80%;
+  border: 0.5px solid rgb(223, 223, 223);
+  align-self: center;
+  margin-top: 30px;
+}
+
+.item .item__title {
+  flex-grow: 1;
+  padding: 30px 15px;
+  text-align: center;
+  font-size: 20px;
+  cursor: pointer;
+  height: fit-content;
+  align-self: center;
+}
+
+.item__price-format {
+  font-size: 15px;
+  font-weight: 400;
+  margin: 10px 5px;
+}
+
+.item__price {
+  font-size: 30px;
+  font-weight: 400;
+  margin-left: 3px;
 }
 
 .item .item__add {
@@ -129,14 +175,21 @@ body {
 }
 
 .cart {
+  background-color: white;
   display: flex;
   flex-basis: 30%;
   flex-flow: column wrap;
-  border: 1px solid grey;
-  border-radius: 5px;
+  border: 1px solid white;
+  border-radius: 10px;
   margin: 20px;
   padding: 15px;
+  box-shadow: 1px 1px #d6d6d6;
   height: fit-content;
+}
+
+.cart__items {
+  max-height: 600px;
+  overflow-y: auto;
 }
 
 .cart__item {
@@ -146,13 +199,25 @@ body {
   border-bottom: 0.1px solid #c3c3c3;
 }
 
-.cart__item:hover {
-  font-size: 17px;
-  border: 1px solid #525252;
-  border-radius: 5px;
-  padding: 10px;
-  background-color: red;
-  color: white;
+.cart__item:hover > .cart__item_img {
+  width: 51%;
+}
+
+.cart__item_img {
+  width: 50%;
+  display: block;
+}
+
+.fa-trash-alt {
+  color: rgb(141, 141, 141);
+  float: right;
+  font-size: 20px;
+  padding-right: 10px;
+}
+
+.cart__item:hover > .fa-trash-alt {
+  color: red;
+  font-size: 21px;
 }
 
 .close-cart {
@@ -182,11 +247,6 @@ body {
   font-size: 20pt;
   text-align: center;
   margin: 20px;
-}
-
-.cart__item_img {
-  width: 150px;
-  display: block;
 }
 
 .cart__item:hover > .cart__item_image {
