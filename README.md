@@ -6,6 +6,6 @@ E-commerce site made during the fundamentals module at Trybe 💚
 # Skills put into practice 👨‍💻
 
 * Make API requests *(Application Programming Interface)* to Mercado Livre
-* Utilizar os seus conhecimentos sobre JavaScript, CSS e HTML; Make use of my JS, CSS and HTML knowledge
+* Make use of my JS, CSS and HTML knowledge
 * Work with asynchronous functions
 * Implement unit tests
